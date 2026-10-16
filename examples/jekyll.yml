@@ -1,0 +1,23 @@
+# Linkguard for a Jekyll site. Copy to .github/workflows/linkguard.yml
+name: Linkguard
+
+on:
+  schedule:
+    - cron: '17 6 * * 1' # weekly, Monday 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ninepointlabs/linkguard@main # pin to a release tag once one is published
+        with:
+          site-type: jekyll
+          # Optional: create new snapshots with your own free Internet Archive keys.
+          # Without these, Linkguard runs in lookup-only mode.
+          wayback-access-key: ${{ secrets.WAYBACK_ACCESS_KEY }}
+          wayback-secret-key: ${{ secrets.WAYBACK_SECRET_KEY }}
