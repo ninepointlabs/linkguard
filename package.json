@@ -1,6 +1,6 @@
 {
   "name": "linkguard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "GitHub Action that checks outbound links in static sites and finds Wayback Machine snapshots for dead ones.",
   "license": "MIT",

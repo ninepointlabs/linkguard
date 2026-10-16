@@ -1,4 +1,4 @@
-name: Linkguard
+name: Linkguard Link Checker
 description: Check outbound links in Jekyll, Hugo and folderblog sites and find Wayback Machine snapshots for dead ones.
 author: Nine Point Labs
 branding:

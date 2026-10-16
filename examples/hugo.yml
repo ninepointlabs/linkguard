@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ninepointlabs/linkguard@v0.1.0
+      - uses: ninepointlabs/linkguard@v0.1.1
         with:
           site-type: hugo
           # Optional: create new snapshots with your own free Internet Archive keys.
