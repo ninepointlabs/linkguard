@@ -11,7 +11,7 @@ import { renderMarkdown, type LinkReport, type RunReport } from './report.js';
 import { applyReplacements, type Replacement } from './rewrite.js';
 import { createProvider, SnapshotError, timestampToMs, type Snapshot } from './snapshot/index.js';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const CHECK_CONCURRENCY = 4;
 const CAPTURE_CONCURRENCY = 4;

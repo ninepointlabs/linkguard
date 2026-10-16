@@ -27807,7 +27807,7 @@ function createProvider(name, options) {
 }
 
 // src/run.ts
-var VERSION7 = "0.1.0";
+var VERSION7 = "0.1.1";
 var MAX_FILE_BYTES = 5 * 1024 * 1024;
 var CHECK_CONCURRENCY = 4;
 var CAPTURE_CONCURRENCY = 4;
