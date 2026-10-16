@@ -20,8 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ninepointlabs/linkguard@main # pin to a release tag once one is published
+      - uses: ninepointlabs/linkguard@v0.1.0
 ```
+
+`@v0.1.0` pins this exact release. `@v0` moves to the newest v0.x release.
 
 Results show up in the run's job summary as a table (URL, status, files:lines, archived URL, action taken), as warning annotations on the source lines of dead links, and as JSON and markdown report files.
 
@@ -70,7 +72,7 @@ Set it up:
 3. Pass them to the action:
 
    ```yaml
-   - uses: ninepointlabs/linkguard@main
+   - uses: ninepointlabs/linkguard@v0.1.0
      with:
        wayback-access-key: ${{ secrets.WAYBACK_ACCESS_KEY }}
        wayback-secret-key: ${{ secrets.WAYBACK_SECRET_KEY }}

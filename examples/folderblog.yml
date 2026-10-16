@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: ninepointlabs/linkguard@main # pin to a release tag once one is published
+      - uses: ninepointlabs/linkguard@v0.1.0
         with:
           site-type: folderblog
           # Propose archived replacements for dead links in a pull request (never pushes to the default branch).
