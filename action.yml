@@ -1,0 +1,67 @@
+name: Linkguard
+description: Check outbound links in Jekyll, Hugo and folderblog sites and find Wayback Machine snapshots for dead ones.
+author: Nine Point Labs
+branding:
+  icon: link
+  color: blue
+inputs:
+  paths:
+    description: Newline-separated globs of files to scan. Defaults depend on site-type.
+    required: false
+    default: ''
+  site-type:
+    description: jekyll, hugo, folderblog or auto.
+    required: false
+    default: auto
+  max-links:
+    description: Maximum unique links to check per run (1-100; the free tier cap is 100).
+    required: false
+    default: '100'
+  fail-on-dead:
+    description: Fail the step when dead links are found.
+    required: false
+    default: 'false'
+  open-pr:
+    description: Open a pull request that replaces dead links with archived copies. Needs contents and pull-requests write permission.
+    required: false
+    default: 'false'
+  ignore-urls:
+    description: URLs to skip, one per line or comma-separated. Plain entries match as prefixes; /regex/ entries as regular expressions.
+    required: false
+    default: ''
+  snapshot-provider:
+    description: Snapshot provider. Only wayback is available.
+    required: false
+    default: wayback
+  wayback-access-key:
+    description: Your Internet Archive S3-style access key (use a secret). Without keys Linkguard runs in lookup-only mode.
+    required: false
+    default: ''
+  wayback-secret-key:
+    description: Your Internet Archive S3-style secret key (use a secret).
+    required: false
+    default: ''
+  max-snapshot-age-days:
+    description: In snapshot mode, capture a new snapshot when the newest one is older than this.
+    required: false
+    default: '365'
+  snapshot-time-budget-minutes:
+    description: Time budget for creating new snapshots.
+    required: false
+    default: '20'
+  github-token:
+    description: Token used only when open-pr is true.
+    required: false
+    default: ${{ github.token }}
+outputs:
+  dead-count:
+    description: Number of dead links.
+  checked-count:
+    description: Number of unique links checked.
+  skipped-count:
+    description: Number of unique links skipped because of max-links.
+  report-path:
+    description: Path to the JSON report. A markdown report sits next to it (linkguard-report.md).
+runs:
+  using: node24
+  main: dist/index.js

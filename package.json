@@ -1,0 +1,28 @@
+{
+  "name": "linkguard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GitHub Action that checks outbound links in static sites and finds Wayback Machine snapshots for dead ones.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --format=esm --outfile=dist/index.js --legal-comments=none --banner:js=\"import { createRequire as __lgCreateRequire } from 'module'; const require = __lgCreateRequire(import.meta.url);\"",
+    "all": "npm run typecheck && npm test && npm run build"
+  },
+  "dependencies": {
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "tinyglobby": "^0.2.17"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
