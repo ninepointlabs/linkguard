@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linkguard: link checker for static sites</title>
+<meta name="description" content="A free GitHub Action that checks outbound links in Jekyll, Hugo and folderblog sites and finds Wayback Machine snapshots for dead ones.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <p class="brand">Linkguard</p>
+    <nav>
+      <a href="https://github.com/ninepointlabs/linkguard">GitHub</a>
+      <a href="https://github.com/ninepointlabs/linkguard#readme">README</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Find dead links in your static site and point readers to archived copies.</h1>
+    <p class="lede">Linkguard is a free GitHub Action. It checks the outbound links in a Jekyll, Hugo or folderblog repo and looks up Internet Archive Wayback Machine snapshots for links that no longer work. If you turn it on, it opens a pull request that swaps dead links for their archived copies.</p>
+    <p>Report-only by default. No account needed for lookups. No telemetry, and no Linkguard server.</p>
+  </section>
+
+  <section>
+    <h2>Quick start</h2>
+    <p>Save this as <code>.github/workflows/linkguard.yml</code>:</p>
+<pre><code>name: Linkguard
+on:
+  schedule:
+    - cron: '17 6 * * 1' # weekly
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ninepointlabs/linkguard@v0.1.0</code></pre>
+    <p>Results appear in the run's job summary, as warning annotations on the source lines of dead links, and as JSON and markdown report files. The repo has complete examples for <a href="https://github.com/ninepointlabs/linkguard/blob/main/examples/jekyll.yml">Jekyll</a>, <a href="https://github.com/ninepointlabs/linkguard/blob/main/examples/hugo.yml">Hugo</a> and <a href="https://github.com/ninepointlabs/linkguard/blob/main/examples/folderblog.yml">folderblog</a>.</p>
+  </section>
+
+  <section>
+    <h2>What it does</h2>
+    <ol>
+      <li><strong>Finds your content.</strong> Detects Jekyll, Hugo or folderblog from the repo layout, or you pass <code>site-type</code> or your own <code>paths</code>.</li>
+      <li><strong>Extracts outbound links</strong> from markdown and HTML, skipping code blocks, comments, relative links and private addresses.</li>
+      <li><strong>Checks each link</strong> with retries, polite rate limits (one request per host at a time) and redirect following. Each link comes back as <code>ok</code>, <code>moved</code>, <code>dead</code> or <code>blocked</code>. Bot-protected pages are reported as blocked, not dead.</li>
+      <li><strong>Looks up Wayback snapshots</strong> for every checked link. Only 2xx captures count.</li>
+      <li><strong>Optionally opens a pull request</strong> (<code>open-pr: true</code>) that replaces each dead link with its <code>web.archive.org</code> copy. It never pushes to your default branch.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Lookup-only mode vs snapshot mode</h2>
+    <div class="cols">
+      <div class="card">
+        <h3>Lookup-only (default)</h3>
+        <p>No secrets needed. Linkguard checks links and looks up existing Wayback snapshots. Dead links with a snapshot get an archived URL in the report. Nothing new is captured.</p>
+      </div>
+      <div class="card">
+        <h3>Snapshot mode</h3>
+        <p>Add your own free Internet Archive S3-style keys as repository secrets. Linkguard then also asks Save Page Now to capture working links that have no recent snapshot, so a copy exists before they die. Captures count against your own account and are slow: a first run over 100 links can take 15 minutes or more.</p>
+      </div>
+    </div>
+<pre><code>- uses: ninepointlabs/linkguard@v0.1.0
+  with:
+    wayback-access-key: ${{ secrets.WAYBACK_ACCESS_KEY }}
+    wayback-secret-key: ${{ secrets.WAYBACK_SECRET_KEY }}</code></pre>
+  </section>
+
+  <section>
+    <h2>Free for up to 100 links per run</h2>
+    <p>Each run checks the first 100 unique links, in file order. Anything beyond that is skipped, and the log says how many. You can lower the cap with <code>max-links</code>, but you can't raise it.</p>
+  </section>
+
+  <section>
+    <h2>Honest limits</h2>
+    <ul>
+      <li>A check is one request from a GitHub-hosted runner. Sites that block data-centre IPs or bots show up as <code>blocked</code>, and a page can be up for people but down for the runner, or the other way round.</li>
+      <li>A link marked <code>dead</code> after retries can still be a temporary outage. Read the report before you merge a pull request.</li>
+      <li>The Internet Archive doesn't publish its rate limits. Lookups and captures can fail, and the availability API sometimes reports no snapshot for a page that has one.</li>
+      <li>If the closest snapshot isn't a 2xx capture, the link is treated as having no usable snapshot, even when an older good one exists.</li>
+      <li>Link extraction uses patterns, not a full parser. Unusual syntax can be missed, and templated links (Hugo shortcodes, Liquid variables) aren't resolved.</li>
+      <li>Each scheduled run that finds replaceable dead links opens a new pull request. Merge or close the previous one.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Data and privacy</h2>
+    <p>Data leaves the runner only as requests to the link targets themselves, link URLs sent to <code>archive.org</code> (never file contents), and GitHub API calls when <code>open-pr</code> is on. This page has no scripts, trackers or external fonts.</p>
+  </section>
+
+  <section>
+    <h2>Read more</h2>
+    <p>Every input, output and setting is documented in the <a href="https://github.com/ninepointlabs/linkguard#readme">README</a>. Source, issues and releases are on <a href="https://github.com/ninepointlabs/linkguard">GitHub</a>. MIT licensed.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Linkguard by Nine Point Labs · <a href="https://github.com/ninepointlabs/linkguard/blob/main/LICENSE">MIT License</a></p>
+  </div>
+</footer>
+</body>
+</html>
